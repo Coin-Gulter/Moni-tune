@@ -26,8 +26,11 @@ class monitor_bright_control():
         self.training_avg_color_db = np.array([[100.]])
         self.training_screen_bright_db = np.array([50.])
 
-        self.last_bright = sbc.get_brightness()
-        self.last_avg_color = get_avg_screen_color()
+        try:
+            self.last_bright = sbc.get_brightness()
+            self.last_avg_color = get_avg_screen_color()
+        except:
+            pass
 
         if os.path.isfile(self.setting_path):
             try:
@@ -92,8 +95,12 @@ class monitor_bright_control():
             time.sleep(0.5)
             if not self.program_paused:
 
-                current_bright = sbc.get_brightness()
-                current_avg_screen_color = get_avg_screen_color()
+                try:
+                    current_bright = sbc.get_brightness()
+                    current_avg_screen_color = get_avg_screen_color()
+                except:
+                    current_bright = self.last_bright
+                    current_avg_screen_color = self.last_avg_color
 
                 if self.last_bright != current_bright or self.trained==False:
 
