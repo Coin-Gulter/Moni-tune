@@ -4,7 +4,12 @@
     Its a program that use linear regression algoritm of machine learning to autotune your screen bright
 in term of changing your screen from dark to light theame and vise-verse.
 
-    After download moni-tune startup with user log in.
+    After download you will have better using experiance if you add program to startup folder.
+For that press "win+r" and enter one of commands:
+    "shell:startup" if you want to autorun only from your user.
+    or
+    "shell:common startup" if you want to autorun from every user.
+    press enter and in opened folder just copy your moni-tune shortcut. Thats all.
 
     To control there are three hotkeys:
 

@@ -14,6 +14,12 @@ get_avg_screen_color = lambda: np.array(pyautogui.screenshot()).mean()
 
 class monitor_bright_control():
     def __init__(self):
+        self.path = os.getcwd()
+        self.setting_file_name = 'app_setting.json'
+        self.fit_model_file_name = 'bright_recog_reg_model.pkl'
+        self.setting_path = os.path.join(self.path, self.setting_file_name)
+        self.fit_model_path = os.path.join(self.path, self.fit_model_file_name)
+
         self.program_work = True
         self.program_paused = False
 
@@ -23,16 +29,25 @@ class monitor_bright_control():
         self.last_bright = sbc.get_brightness()
         self.last_avg_color = get_avg_screen_color()
 
-        if os.path.isfile('app_setting.json'):
-            with open('app_setting.json', 'r', encoding='utf-8') as outfile:
-                self.setting = json.load(outfile)
+        if os.path.isfile(self.setting_path):
+            try:
+                with open(self.setting_path, 'r', encoding='utf-8') as outfile:
+                    self.setting = json.load(outfile)
+            except:
+                pass
         else:
             self.setting = {"max_screen_object":30, "avg_color_diviation":15}
-            with open("app_setting.json", "w", encoding="utf-8") as infile:
-                json.dump(self.setting, infile)
+            try:
+                with open(self.setting_path, "w", encoding="utf-8") as infile:
+                    json.dump(self.setting, infile)
+            except:
+                pass
 
-        if os.path.isfile('bright_recog_reg_model.pkl'):
-            self.img_reg_model = pickle.load(open("bright_recog_reg_model.pkl", "rb"))
+        if os.path.isfile(self.fit_model_path):
+            try:
+                self.img_reg_model = pickle.load(open(self.fit_model_path, "rb"))
+            except:
+                pass
             self.trained = True
         else:
             self.img_reg_model = linear_model.LinearRegression()
@@ -92,7 +107,10 @@ class monitor_bright_control():
                     self.time_now = time.time()
                     self.trained = True
 
-                    pickle.dump(self.img_reg_model, open("bright_recog_reg_model.pkl", "wb"))
+                    try:
+                        pickle.dump(self.img_reg_model, open(self.fit_model_path, "wb"))
+                    except:
+                        pass
 
                 elif abs(current_avg_screen_color-self.last_avg_color) > self.setting["avg_color_diviation"]:
 
@@ -135,7 +153,7 @@ class monitor_bright_control():
                 if value_num<=200 and value_num>=5 :
                     self.setting[key] = value_num
 
-        with open("app_setting.json", "w", encoding="utf-8") as infile:
+        with open(self.setting_path, "w", encoding="utf-8") as infile:
             json.dump(self.setting, infile)
 
     def close_program(self):
