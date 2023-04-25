@@ -7,7 +7,7 @@ import os
 import pickle
 import json
 from sklearn import linear_model
-from windows_toasts import InteractableWindowsToaster, ToastText1, ToastInputTextBox, ToastButton
+from windows_toasts import InteractableWindowsToaster, ToastText1, ToastInputTextBox, ToastButton, ToastAudio
 
 
 get_avg_screen_color = lambda: np.array(pyautogui.screenshot()).mean()
@@ -58,12 +58,14 @@ class monitor_bright_control():
 
         self.interacteble_toaster = InteractableWindowsToaster('Moni-tune')
         self.toast_notification = ToastText1()
+        self.toast_notification.SetAudio(ToastAudio(silent=True))
         self.toast_input_box = ToastText1()
         self.toast_input_box.SetBody(f"Your setting now:\nSaved screens: {self.setting['max_screen_object']}\nDiviation: {self.setting['avg_color_diviation']}")
         self.toast_input_box.AddInput(ToastInputTextBox('max_screen_object', 'Saved screen from 5 to 200:', 'only number'))
         self.toast_input_box.AddInput(ToastInputTextBox('avg_color_diviation', 'Diviation value from 5 to 200:', 'only number'))
         self.toast_input_box.AddAction(ToastButton('submit', 'submit'))
         self.toast_input_box.on_activated = self.accept_new_setting
+        self.toast_input_box.SetAudio(ToastAudio(silent=True))
         self.show_notification = False
         self.notification_setting = False
         self.notification_text = ''
@@ -72,7 +74,7 @@ class monitor_bright_control():
         keyboard.add_hotkey('ctrl+alt+v', self.alive_program)
         keyboard.add_hotkey('ctrl+alt+x', self.close_program)
         keyboard.add_hotkey('ctrl+alt+z', self.additional_setting)
-        
+    
 
     def insert_in_db(self, current_avg_screen_color, current_bright):
 
